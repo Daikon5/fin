@@ -1,0 +1,124 @@
+{% extends "index.html" %}
+
+{% block content %}
+<main>
+    <form method="POST" action="../index.php">
+        <p>Создание нового администратора</p>
+        <input type="text" name="login" placeholder="Логин">
+        <input type="text" name="password" placeholder="Пароль">
+        <input type="submit" name="createAdmin" value="Создать">
+    </form>
+    <br>
+
+
+    <table border='1'>
+    <tr><th>id</th><th>Логин</th><th>Пароль</th><th>Действия</th></tr>
+    {% for admin in adminsList %}
+        <tr><td>{{ admin.user_id }}</td><td>{{ admin.login }}</td><td> {{admin.password}} </td><td>
+            <a href="../index.php?action=delete&id={{ admin.user_id }}">Удалить</a>
+            <a href="../index.php?action=editpassword&id={{ admin.user_id }}">Изменить пароль</a>
+            </td></tr>
+    {% endfor %}
+    </table>
+
+    {% if adminVariables.editpassword %}
+        <form method="POST" action="../index.php">
+            <p>Меняем пароль администратору с id {{ adminVariables.editpassword_id }}</p>
+            <input type="text" name="newpass" placeholder="Введите новый пароль">
+            <input type="submit" name="setpass" value="Отправить">
+        </form>
+    {% endif %}
+    <br><hr><br>
+
+    <form method="POST" action="../index.php">
+        <p>Создание новой темы</p>
+        <input type="text" name="category_name" placeholder="Название новой темы">
+        <input type="submit" name="createCategory" value="Создать">
+    </form>
+    <br>
+
+    <table border='1'>
+        <tr><th>id</th><th>Название темы</th><th>Всего вопросов</th><th>Опубликовано</th><th>Без ответа/заморожено</th><th>Действия</th></tr>
+        {% for c in categoriesList %}
+        <tr><td>{{ c.category_id }}</td><td>{{ c.category_name }}</td><td>{{ c.overall }}</td><td>{{ c.published }}</td><td>{{ c.suspended }}</td><td>
+            <a href="../index.php?action=deleteCat&id={{ c.category_id }}">Удалить тему со всеми вопросами</a>
+        </td></tr>
+        {% endfor %}
+    </table>
+    <br><hr><br>
+
+    <p>Просмотр/администрирование вопросов по темам.</p>
+    <form method="POST" action="../index.php">
+        <select name="admin_category_id">
+            <option selected disabled>выберите тему</option>
+            {% for c in categoriesList %}
+            <option value="{{ c.category_id }}">{{ c.category_name }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" name="admin_sort_questions" value="Выбрать">
+    </form>
+
+    {% if adminVariables.sortedQuestions %}
+        <table border="1px">
+        <tr><th>Вопрос</th><th>Дата создания</th><th>Статус</th><th>Действия</th><th>Изменение темы</th></tr>
+        {% for question in adminVariables.sortedQuestions %}
+        <tr><td>{{ question.question }}</td><td>{{ question.date_added }}</td><td>{{ question.status }}</td><td>
+            <a href="../index.php?action=del_question&question_id={{ question.question_id }}">Удалить</a>
+            <a href="../index.php?action=answer&question_id={{ question.question_id }}">Ответить</a>
+            <a href="../index.php?action=edit_question&question_id={{ question.question_id }}">Редактировать</a>
+            {% if question.status == 'suspended' %}
+                <a href="../index.php?action=published&question_id={{ question.question_id }}">Опубликовать</a>
+            {% else %}
+                <a href="../index.php?action=suspended&question_id={{ question.question_id }}">Скрыть</a>
+            {% endif %}
+            </td><td>
+            <form method="POST" action="../index.php">
+                <select name="change_category_id">
+                    <option selected disabled>выберите тему</option>
+                    {% for c in categoriesList %}
+                    <option value="{{ c.category_id }}">{{ c.category_name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" name="change_category" value="В другую тему">
+            </form>
+        </td></tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+
+    {% if adminVariables.answer %}
+        <p>Дать ответ:</p>
+        <form method="POST" action="../index.php">
+            <input type="text" name="author" placeholder="Автор ответа">
+            <input type="text" name="answer_text" placeholder="и сам ответ">
+            <input type="checkbox" name="publish" value="pub"> <span>Опубликовать после ответа?</span>
+            <input type="submit" name="answer_form" value="Отправить">
+        </form>
+    {% endif %}
+
+    {% if adminVariables.edit_question %}
+        <p>Редактируем вопрос:</p>
+        <form method="POST" action="../index.php">
+            <input type="text" name="question" value="{{ adminVariables.edit.question }}">
+            <input type="text" name="author" value="{{ adminVariables.edit.author_name }}">
+            <input type="text" name="email" value="{{ adminVariables.edit.author_email }}">
+            <input type="text" name="answer" value="{{ adminVariables.edit.answer }}">
+            <input type="submit" name="edited_question" value="Отправить">
+        </form>
+
+    {% endif %}
+
+    <br><hr><br>
+    <p>Вопросы без ответов:</p>
+    <table border="1">
+        <tr><th>Вопрос</th><th>Тема</th><th>Действия</th></tr>
+        {% for q in uaQuestions %}
+            <tr><td>{{ q.question }}</td><td>{{ q.category }}</td><td>
+                <a href="../index.php?action=del_question&question_id={{ q.question_id }}">Удалить</a>
+            </td></tr>
+        {% endfor %}
+    </table>
+
+
+</main>
+{% endblock %}

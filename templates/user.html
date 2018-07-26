@@ -1,0 +1,47 @@
+{% extends "index.html" %}
+
+{% block content %}
+<main>
+    <section class="ask">
+        <div class="ask-form">
+            <p><strong>Есть вопрос? Задайте его нам и, скорее всего, мы вам ответим!</strong></p>
+            <form method="POST" action="../index.php">
+                <input type="text" name="question" placeholder="Текст вопроса">
+                <input type="text" name="email" placeholder="Ваш email">
+                <input type="text" name="name" placeholder="Ваше имя">
+                <select name="category_id">
+                    <option selected disabled>выберите категорию</option>
+                    {% for cat in categories %}
+                        <option value="{{cat.category_id}}">{{ cat.category_name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" name="user_question" value="Отправить">
+            </form>
+        </div>
+    </section>
+    <section class="categories">
+        <div class="category">
+            {% for cat in categories %}
+            <p><a href="../index.php?category={{cat.category_id}}">{{ cat.category_name }} </a></p>
+            {% endfor %}
+        </div>
+    </section>
+    <section class="content">
+        {% if questions|length == 0 %}
+            {{ "В этой категории нет вопросов." }}
+        {% endif %}
+        {% for item in questions %}
+        <div class="question">
+            <div class="que">
+                <p>Вопрос в категории "{{ item.category }}" от {{ item.author_name }} ({{ item.author_email }}), задан {{ item.date_added }}:</p>
+                <span>{{ item.question }}</span>
+            </div>
+            <div class="answer">
+                <p>Ответ от {{ item.answerer }}:</p>
+                {{ item.answer }}
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}

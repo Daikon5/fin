@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="templates/css/style.css">
+    <title>FAQ</title>
+    {% endblock %}
+</head>
+<body>
+    <header>
+        <h2>FAQ</h2>
+        <div class="input-bar">
+            <div class="input-form">
+                {% if adminVariables.isAuth %}
+                    <form action="../logout.php">
+                        <span>Устали администрировать? Добро пожаловать на </span>
+                        <button type="submit">Выход</button>
+                    </form>
+                {% else %}
+                    <form method="POST" action="../index.php">
+                        <span>О, вы администратор?</span>
+                        <input type="text" name ="login" placeholder="Логин">
+                        <input type="text" name="password" placeholder="Пароль">
+                        <input type="submit" name="sign_in" value="Войти">
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
