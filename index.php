@@ -20,20 +20,20 @@ if (!empty($_POST)) {                                                      // а
     if (isset($_POST['sign_in'])) {
         $login = strip_tags($_POST['login']);
         $password = strip_tags($_POST['password']);
-        auth($login, $password);
+        auth($login, $password, $db, $adminVariables);
     }
     if (isset($_POST['user_question'])) {                                    // обработка вопроса от пользователя
-        processUserQuestion($_POST);
+        processUserQuestion($_POST, $db);
     }
 }
 
 if (isAuth()) {                                                             // если админ залогинен
     $adminVariables['isAuth'] = true;
-    $admins = new AdminActions();
+    $admins = new AdminActions($db);
     $adminsList = $admins->getAdminsList();
-    $categories = new CategoriesAction();
+    $categories = new CategoriesAction($db);
     $categoriesList = $categories->getAllCategories();
-    $questions = new QuestionActions();
+    $questions = new QuestionActions($db);
     $unansweredQuestions = $questions->getUnansweredQuestions();
 
     if (isset($_GET['action'])) {
@@ -116,12 +116,12 @@ if (isAuth()) {                                                             // �
                                             'uaQuestions' => $unansweredQuestions]);
 }
 else {                                                                      //  если админ не залогинен = обычный пользователь
-    $categories = getCategories();
+    $categories = getCategories($db);
     if (isset($_GET['category'])) {
-        $questions = getQuestionsByCategory($_GET['category']);
+        $questions = getQuestionsByCategory($_GET['category'], $db);
     }
     else {
-        $questions = getQuestionsAll();
+        $questions = getQuestionsAll($db);
     }
     echo $twig->render('user.html', ['categories' => $categories,
                                             'questions' => $questions]);

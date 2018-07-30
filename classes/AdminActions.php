@@ -1,12 +1,15 @@
 <?php
 
 class AdminActions {
-    function getAdminsList() {
-        global $db;
 
+    function __construct($db) {
+        $this->db = $db;
+    }
+
+    function getAdminsList() {
         try {
             $sqlGetAdminsList = 'SELECT * FROM users';
-            $query = $db->prepare($sqlGetAdminsList);
+            $query = $this->db->prepare($sqlGetAdminsList);
             $query->execute();
             $adminsList = $query->fetchAll();
         }
@@ -18,7 +21,6 @@ class AdminActions {
     }
 
     function createAdmin($login, $password) {
-        global $db;
         $unique = true;
 
         $adminsList = $this->getAdminsList();
@@ -31,7 +33,7 @@ class AdminActions {
         if ($unique) {
             try {
                 $sqlCreateAdmin = 'INSERT INTO users (user_id, login, password) VALUES (?,?,?)';
-                $db->prepare($sqlCreateAdmin)->execute([NULL, $login, $password]);
+                $this->db->prepare($sqlCreateAdmin)->execute([NULL, $login, $password]);
             } catch (PDOException $e) {
                 echo $e->getMessage();
             }
@@ -39,11 +41,9 @@ class AdminActions {
     }
 
     function deleteAdmin($id) {
-        global $db;
-
         try {
             $sqlDeleteAdmin = 'DELETE FROM users WHERE user_id = ?';
-            $db->prepare($sqlDeleteAdmin)->execute([$id]);
+            $this->db->prepare($sqlDeleteAdmin)->execute([$id]);
         }
         catch (PDOException $e) {
             echo $e->getMessage();
@@ -51,11 +51,9 @@ class AdminActions {
     }
 
     function setPassword($id, $password) {
-        global $db;
-
         try {
             $sqlUpdatePassword = 'UPDATE users SET password = ? WHERE user_id = ?';
-            $db->prepare($sqlUpdatePassword)->execute([$password, $id]);
+            $this->db->prepare($sqlUpdatePassword)->execute([$password, $id]);
         }
         catch (PDOException $e) {
             echo $e->getMessage();

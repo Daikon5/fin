@@ -1,8 +1,5 @@
 <?php
-function auth($login,$password) {                                                                  //  аутентификация
-    global $db;
-    global $adminVariables;
-
+function auth($login,$password, $db, $adminVariables) {                                                                  //  аутентификация
     try {
         $sqlAuth = 'SELECT * FROM users WHERE login=? AND password=?';
         $query = $db->prepare($sqlAuth);
@@ -26,9 +23,7 @@ function isAuth(){                                                              
     return isset($_SESSION['user_id']);
 }
 
-function getCategories() {                                                                          //  категории для пользователя
-    global $db;
-
+function getCategories($db) {                                                                          //  категории для пользователя
     try {
         $categoriesQuery = 'SELECT * FROM categories';
         $query = $db->prepare($categoriesQuery);
@@ -42,9 +37,7 @@ function getCategories() {                                                      
     return $categories;
 }
 
-function getQuestionsAll() {                                                                         //  все отвеченные вопросы для пользователя
-    global $db;
-
+function getQuestionsAll($db) {                                                                         //  все отвеченные вопросы для пользователя
     try {
         $questionsQuery = 'SELECT q.author_name, q.author_email, q.question, q.date_added, a.answer, a.author as answerer, c.category_name as category
                           FROM questions q
@@ -62,9 +55,7 @@ function getQuestionsAll() {                                                    
     return $questions;
 }
 
-function getQuestionsByCategory($category) {                                                          //  отвеченный вопросы в выбранной категории
-    global $db;
-
+function getQuestionsByCategory($category, $db) {                                                          //  отвеченный вопросы в выбранной категории
     try {
         $questionsQuery = 'SELECT q.author_name, q.author_email, q.question, q.date_added, a.answer, a.author as answerer, c.category_name as category
                           FROM questions q
@@ -82,8 +73,7 @@ function getQuestionsByCategory($category) {                                    
     return $questions;
 }
 
-function processUserQuestion($array) {
-    global $db;
+function processUserQuestion($array, $db) {
     $inputErrors = [];
     $wantedFields = ['question','email','name','category_id'];
 

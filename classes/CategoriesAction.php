@@ -1,17 +1,20 @@
 <?php
 
 class CategoriesAction {
-    function getAllCategories() {
-        global $db;
 
+    function __construct($db) {
+        $this->db = $db;
+    }
+
+    function getAllCategories() {
         try {
             $sqlGetCategoriesList = 'SELECT * FROM categories';
-            $query = $db->prepare($sqlGetCategoriesList);
+            $query = $this->db->prepare($sqlGetCategoriesList);
             $query->execute();
             $categoriesList = $query->fetchAll();
 
             $sqlGetQuestions = 'SELECT * FROM questions';
-            $query = $db->prepare($sqlGetQuestions);
+            $query = $this->db->prepare($sqlGetQuestions);
             $query->execute();
             $questionsList = $query->fetchAll();
         }
@@ -45,12 +48,11 @@ class CategoriesAction {
     }
 
     function addCategory($newCategory) {
-        global $db;
         $unique = true;
 
         try {
             $sqlGetCategoriesList = 'SELECT * FROM categories';
-            $query = $db->prepare($sqlGetCategoriesList);
+            $query = $this->db->prepare($sqlGetCategoriesList);
             $query->execute();
             $categoriesList = $query->fetchAll();
 
@@ -62,7 +64,7 @@ class CategoriesAction {
 
             if ($unique) {
                 $sqlAddCategory = 'INSERT INTO categories (category_id, category_name) VALUES (?, ?)';
-                $db->prepare($sqlAddCategory)->execute([NULL, $newCategory]);
+                $this->db->prepare($sqlAddCategory)->execute([NULL, $newCategory]);
             }
         }
         catch (PDOException $e) {
@@ -71,13 +73,11 @@ class CategoriesAction {
     }
 
     function deleteCategory($categoryId) {
-        global $db;
-
         try {
             $tables = ['categories', 'questions'];
             foreach ($tables as $table) {
                 $sqlDeleteCategory = "DELETE FROM $table WHERE category_id = ?";
-                $db->prepare($sqlDeleteCategory)->execute([$categoryId]);
+                $this->db->prepare($sqlDeleteCategory)->execute([$categoryId]);
             }
         }
         catch (PDOException $e) {
@@ -86,11 +86,9 @@ class CategoriesAction {
     }
 
     function getQuestionsByCategory($categoryId) {
-        global $db;
-
         try {
             $sqlGetQuestions = 'SELECT * FROM questions WHERE category_id = ?';
-            $query = $db->prepare($sqlGetQuestions);
+            $query = $this->db->prepare($sqlGetQuestions);
             $query->execute([$categoryId]);
             $questionsList = $query->fetchAll();
         }
