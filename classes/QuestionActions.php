@@ -58,7 +58,11 @@ class QuestionActions {
         }
     }
 
-    function changeCategory($question_id, $category_id) {
+    function changeCategory($string) {
+        $result = explode(' ', $string);
+        $question_id = $result[0];
+        $category_id = $result[1];
+
         try {
             $sqlChangeCategory = 'UPDATE questions SET category_id = ? WHERE question_id = ?';
             $this->db->prepare($sqlChangeCategory)->execute([$category_id, $question_id]);

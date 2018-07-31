@@ -106,7 +106,7 @@ if (isAuth()) {                                                             // Ð
     }
 
     if (isset($_POST['change_category_id'])) {
-        //$questions->changeCategory($question_id, $_POST['category_id']);
+        $questions->changeCategory($_POST['change_category_id']);
     }
 
 
