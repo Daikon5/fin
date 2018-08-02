@@ -6,6 +6,20 @@ class CategoriesAction {
         $this->db = $db;
     }
 
+    function getUserCategories() {                                                                          //  категории для пользователя
+        try {
+            $categoriesQuery = 'SELECT * FROM categories';
+            $query = $this->db->prepare($categoriesQuery);
+            $query->execute();
+            $categories = $query->fetchAll();
+        }
+        catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+
+        return $categories;
+    }
+
     function getAllCategories() {
         try {
             $sqlGetCategoriesList = 'SELECT * FROM categories';

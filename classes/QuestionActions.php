@@ -5,6 +5,64 @@ class QuestionActions {
         $this->db = $db;
     }
 
+    function processUserQuestion($array) {
+        $inputErrors = [];
+        $wantedFields = ['question','email','name','category_id'];
+
+        foreach ($wantedFields as $field) {
+            if (empty($array[$field])) {
+                array_push($inputErrors, $field);
+            }
+        }
+        if (count($inputErrors) == 0) {
+            try {
+                $dateNow = date('Y-m-d')." ".date('H:i:s');
+                $addQuestionQuery = 'INSERT INTO questions(question_id, author_name, author_email, category_id, status, question, date_added) 
+                                  VALUES (?,?,?,?,?,?,?)';
+                $this->db->prepare($addQuestionQuery)->execute([NULL, $array['name'], $array['email'], $array['category_id'], 'suspended', $array['question'], $dateNow]);
+            }
+            catch (PDOException $e) {
+                echo $e->getMessage();
+            }
+        }
+    }
+
+    function getQuestionsAll() {                                                                         //  все отвеченные вопросы для пользователя
+        try {
+            $questionsQuery = 'SELECT q.author_name, q.author_email, q.question, q.date_added, a.answer, a.author as answerer, c.category_name as category
+                          FROM questions q
+                          JOIN answers a ON a.question_id = q.question_id
+                          JOIN categories c ON q.category_id = c.category_id
+                          WHERE q.status = ?';
+            $query = $this->db->prepare($questionsQuery);
+            $query->execute(['published']);
+            $questions = $query->fetchAll();
+        }
+        catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+
+        return $questions;
+    }
+
+    function getQuestionsByCategory($category) {                                                          //  отвеченный вопросы в выбранной категории
+        try {
+            $questionsQuery = 'SELECT q.author_name, q.author_email, q.question, q.date_added, a.answer, a.author as answerer, c.category_name as category
+                          FROM questions q
+                          JOIN answers a ON a.question_id = q.question_id
+                          JOIN categories c ON q.category_id = c.category_id
+                          WHERE q.category_id = ? AND q.status = ?';
+            $query = $this->db->prepare($questionsQuery);
+            $query->execute([$category, 'published']);
+            $questions = $query->fetchAll();
+        }
+        catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+
+        return $questions;
+    }
+
     function getUnansweredQuestions() {
         try {
             $sqlGetSuspendedQuestions = 'SELECT q.author_name, q.question_id, q.author_email, q.question, q.date_added, c.category_name as category 
@@ -50,7 +108,7 @@ class QuestionActions {
 
     function deleteQuestion($question_id) {
         try {
-            $sqlDeleteQuestion = 'DELETE * FROM questions WHERE question_id = ?';
+            $sqlDeleteQuestion = 'DELETE FROM questions WHERE question_id = ?';
             $this->db->prepare($sqlDeleteQuestion)->execute([$question_id]);
         }
         catch (PDOException $e) {
