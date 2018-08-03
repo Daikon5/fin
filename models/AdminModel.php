@@ -7,6 +7,34 @@ class AdminModel {
     }
 
     /*
+     * аутентификация администратора
+     */
+    function auth($login,$password) {
+        try {
+            $sqlAuth = 'SELECT user_id, login, password FROM users WHERE login=? AND password=?';
+            $query = $this->db->prepare($sqlAuth);
+            $query->execute([$login, $password]);
+            $result = $query->fetch();
+        }
+        catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+
+        if ($login == $result['login'] && $password == $result['password']) {
+            $_SESSION['user_id'] = $result['user_id'];
+            header('location: index.php');
+        }
+    }
+
+    /*
+     * логаут
+     */
+    function logout() {
+        session_destroy();
+        header('Location: index.php');
+    }
+
+    /*
      * получение списка администраторов
      */
     function getAdminsList() {

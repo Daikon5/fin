@@ -38,7 +38,7 @@ class AdminController {
                     $this->$action($array);
                 }
             } else {
-                $possibleValues = ['setPassword', 'createAdmin', 'createCategory', 'adminSortQuestions', 'getAnswerForm', 'changeCategory', 'updateQuestion'];
+                $possibleValues = ['setPassword', 'createAdmin', 'createCategory', 'adminSortQuestions', 'getAnswerForm', 'changeCategory', 'updateQuestion', 'logout'];
                 foreach ($possibleValues as $value) {
                     if (array_key_exists($value, $array)) {
                         $this->$value($array);
@@ -49,6 +49,14 @@ class AdminController {
         else {
             $this->adminPanelRender();
         }
+    }
+
+
+    /*
+     * логаут
+     */
+    function logout() {
+        $this->admins->logout();
     }
 
     /*

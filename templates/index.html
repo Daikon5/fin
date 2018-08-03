@@ -13,9 +13,9 @@
         <div class="input-bar">
             <div class="input-form">
                 {% if adminVariables.isAuth %}
-                    <form action="../logout.php">
+                    <form method="POST" action="../index.php">
                         <span>Устали администрировать? Добро пожаловать на </span>
-                        <button type="submit">Выход</button>
+                        <button type="submit" name="logout">Выход</button>
                     </form>
                 {% else %}
                     <form method="POST" action="../index.php">

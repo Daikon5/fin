@@ -33,7 +33,7 @@ class CategoriesModel {
             $query->execute();
             $categoriesList = $query->fetchAll();
 
-            $sqlGetQuestions = 'SELECT * FROM questions';
+            $sqlGetQuestions = 'SELECT question_id, category_id, author_name, author_email, question, status, date_added FROM questions';
             $query = $this->db->prepare($sqlGetQuestions);
             $query->execute();
             $questionsList = $query->fetchAll();

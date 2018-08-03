@@ -6,6 +6,7 @@ class UserController {
         $this->db = $db;
         $this->questions = new QuestionsModel($db);
         $this->categories = new CategoriesModel($db);
+        $this->admin = new AdminModel($db);
         $this->twig = $twig;
     }
 
@@ -28,7 +29,7 @@ class UserController {
             elseif (isset($array['sign_in'])) {
                 $login = strip_tags($array['login']);
                 $password = strip_tags($array['password']);
-                $this->auth($login, $password);
+                $this->admin->auth($login, $password);
             }
             elseif (isset($array['user_question'])) {
                 $this->questions->processUserQuestion($array);
@@ -37,26 +38,6 @@ class UserController {
         }
         else {
             $this->userRender();
-        }
-    }
-
-    /*
-     * аутентификация администратора
-     */
-    function auth($login,$password) {
-        try {
-            $sqlAuth = 'SELECT * FROM users WHERE login=? AND password=?';
-            $query = $this->db->prepare($sqlAuth);
-            $query->execute([$login, $password]);
-            $result = $query->fetch();
-        }
-        catch (PDOException $e) {
-            echo $e->getMessage();
-        }
-
-        if ($login == $result['login'] && $password == $result['password']) {
-            $_SESSION['user_id'] = $result['user_id'];
-            header('location: index.php');
         }
     }
 
