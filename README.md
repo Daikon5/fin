@@ -13,10 +13,7 @@
 
 Файлы:
 - index.php - центр управления контроллерами
-- faq.sql - дамп базы данных
+- faq.sql - дамп базы данных (UML-схема БД https://drive.google.com/open?id=1-wD0STMaZlP0zsgLE_2v8u4Xf1DYyskd)
 - dbconfig.php - найстройки доступа к БД
 - logout.php - удалене сессии и логаут
 - composer.lock, composer.json - установление зависимостей Composer
-
-
-Схема БД https://drive.google.com/open?id=1-wD0STMaZlP0zsgLE_2v8u4Xf1DYyskd
