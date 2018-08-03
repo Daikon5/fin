@@ -68,7 +68,7 @@ class __TwigTemplate_24aab36ed9f75a1ce759622bb7050c00bf86b3237459416746068467db8
         $context['_seq'] = twig_ensure_traversable(($context["categories"] ?? null));
         foreach ($context['_seq'] as $context["_key"] => $context["cat"]) {
             // line 25
-            echo "            <p><a href=\"../index.php?category=";
+            echo "            <p><a href=\"../index.php?getQuestionsByCategoryId=";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["cat"], "category_id", array()), "html", null, true);
             echo "\">";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["cat"], "category_name", array()), "html", null, true);

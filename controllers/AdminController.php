@@ -6,17 +6,20 @@
  * Time: 19:50
  */
 
-class Admin {
+class AdminController {
     public $adminVariables = [];
 
     function __construct($db, $twig) {
-        $this->questions = new QuestionActions($db);
-        $this->categories = new CategoriesAction($db);
-        $this->admins = new AdminActions($db);
+        $this->questions = new QuestionsModel($db);
+        $this->categories = new CategoriesModel($db);
+        $this->admins = new AdminModel($db);
         $this->twig = $twig;
         $this->adminVariables['isAuth'] = true;
     }
 
+    /*
+     * стандартный рендер панели админа
+     */
     function adminPanelRender() {
         echo $this->twig->render('admin.html', ['adminVariables'=>$this->adminVariables,
             'adminsList' => $this->admins->getAdminsList(),
@@ -24,6 +27,9 @@ class Admin {
             'uaQuestions' => $this->questions->getUnansweredQuestions()]);
     }
 
+    /*
+     * выбор метода для обработки действий
+     */
     function adminController($array) {
         if (!empty($array)) {
             if (isset ($array['action'])) {
@@ -45,40 +51,61 @@ class Admin {
         }
     }
 
-    function editPassword($array) {                                                                 //подготовка к смене пароля
+    /*
+     * подготовка к смене пароля
+     */
+    function editPassword($array) {
         $this->adminVariables['editpassword'] = true;
         $this->adminVariables['editpassword_id'] = $array['id'];
         $_SESSION['editpassword_id'] = $array['id'];
         $this->adminPanelRender();
     }
 
-    function deleteAdmin($array) {                                                                  //удаление админа
+    /*
+     * удаление администратора
+     */
+    function deleteAdmin($array) {
         $this->admins->deleteAdmin($array['id']);
         $this->adminPanelRender();
     }
 
-    function deleteCategory($array) {                                                               //удаление темы
+    /*
+     * удаление категории
+     */
+    function deleteCategory($array) {
         $this->categories->deleteCategory($array['id']);
         $this->adminPanelRender();
     }
 
-    function deleteQuestion($array) {                                                               //удаление вопроса
+    /*
+     * удаление вопроса
+     */
+    function deleteQuestion($array) {
         $this->questions->deleteQuestion($array['question_id']);
         $this->adminPanelRender();
     }
 
-    function changeQuestionStatus($array) {                                                         //изменение статуса вопроса
+    /*
+     * изменение статуса вопроса
+     */
+    function changeQuestionStatus($array) {
         $this->questions->changeStatus($array['newstatus'], $array['question_id']);
         $this->adminPanelRender();
     }
 
-    function setAnswerPrepare($array) {                                                             //подготовка к ответу на вопрос
+    /*
+     * подготовка к ответу на вопрос
+     */
+    function setAnswerPrepare($array) {
         $_SESSION['question_to_answer'] = $array['question_id'];
         $this->adminVariables['answer'] = true;
         $this->adminPanelRender();
     }
 
-    function editQuestionPrepare($array) {                                                                 //подготовка к редактированию вопроса
+    /*
+     * подготовка к редактированию вопроса
+     */
+    function editQuestionPrepare($array) {
         $_SESSION['question_to_edit'] = $array['question_id'];
         $this->adminVariables['edit_question'] = true;
         $this->adminVariables['edit'] = $this->questions->getQuestionToEdit($array['question_id']);
@@ -86,28 +113,43 @@ class Admin {
         $this->adminPanelRender();
     }
 
-    function setPassword($array) {                                                                  //смена пароля админа
+    /*
+     * смена пароля администратора
+     */
+    function setPassword($array) {
         $this->admins->setPassword($_SESSION['editpassword_id'], $array['newpass']);
         $this->adminPanelRender();
     }
 
-    function createAdmin($array) {                                                                  //создание новго админа
+    /*
+     * создание нового администратора
+     */
+    function createAdmin($array) {
         $this->admins->createAdmin($array['login'], $array['password']);
         $this->adminPanelRender();
     }
 
-    function createCategory($array) {                                                               //создание новой темы
+    /*
+     * создание новой категории
+     */
+    function createCategory($array) {
         $this->categories->addCategory($array['category_name']);
         $this->adminPanelRender();
     }
 
-    function adminSortQuestions($array) {                                                           //вопросы из определенной категории
+    /*
+     * вопросы из определенной категории
+     */
+    function adminSortQuestions($array) {
         $sortedQuestions =  $this->categories->getQuestionsByCategory($array['admin_category_id']);
         $this->adminVariables['sortedQuestions'] = $sortedQuestions;
         $this->adminPanelRender();
     }
 
-    function setAnswer($array) {                                                                    //отправка ответа на вопрос
+    /*
+     * отправка ответа на вопрос
+     */
+    function setAnswer($array) {
         if ($_POST['publish'] == 'pub') {
             $publish = 'published';
         }
@@ -118,12 +160,18 @@ class Admin {
         $this->adminPanelRender();
     }
 
-    function updateQuestion($array) {                                                               //отправка отредактированного вопроса
+    /*
+     * отправка отредактированного вопроса
+     */
+    function updateQuestion($array) {
         $this->questions->updateAnsweredQuestion($_SESSION['question_to_edit'], $_SESSION['answer_to_edit'], $array['author'], $array['email'], $array['question'], $array['answer']);
         $this->adminPanelRender();
     }
 
-    function changeCategory($array) {                                                             //перенос вопроса в другую тему
+    /*
+     * перенос вопроса в другую категорию
+     */
+    function changeCategory($array) {
         $this->questions->changeCategory($array['change_category_id']);
         $this->adminPanelRender();
     }

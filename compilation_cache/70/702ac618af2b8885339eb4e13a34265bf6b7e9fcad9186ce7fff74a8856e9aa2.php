@@ -53,11 +53,11 @@ class __TwigTemplate_75b82219d2e55ad8a2accc98a879e5d95ec4a8dc35f92e5c9fa2643790c
             echo "</td><td> ";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["admin"], "password", array()), "html", null, true);
             echo " </td><td>
-            <a href=\"../index.php?action=delete&id=";
+            <a href=\"../index.php?action=deleteAdmin&id=";
             // line 18
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["admin"], "user_id", array()), "html", null, true);
             echo "\">Удалить</a>
-            <a href=\"../index.php?action=editpassword&id=";
+            <a href=\"../index.php?action=editPassword&id=";
             // line 19
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["admin"], "user_id", array()), "html", null, true);
             echo "\">Изменить пароль</a>
@@ -65,7 +65,7 @@ class __TwigTemplate_75b82219d2e55ad8a2accc98a879e5d95ec4a8dc35f92e5c9fa2643790c
     ";
         }
         $_parent = $context['_parent'];
-        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['admin'], $context['_parent'], $context['loop']);
+        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['AdminController'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
         // line 22
         echo "    </table>
@@ -80,7 +80,7 @@ class __TwigTemplate_75b82219d2e55ad8a2accc98a879e5d95ec4a8dc35f92e5c9fa2643790c
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), ($context["adminVariables"] ?? null), "editpassword_id", array()), "html", null, true);
             echo "</p>
             <input type=\"text\" name=\"newpass\" placeholder=\"Введите новый пароль\">
-            <input type=\"submit\" name=\"setpass\" value=\"Отправить\">
+            <input type=\"submit\" name=\"setPassword\" value=\"Отправить\">
         </form>
     ";
         }
@@ -113,7 +113,7 @@ class __TwigTemplate_75b82219d2e55ad8a2accc98a879e5d95ec4a8dc35f92e5c9fa2643790c
             echo "</td><td>";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["c"], "suspended", array()), "html", null, true);
             echo "</td><td>
-            <a href=\"../index.php?action=deleteCat&id=";
+            <a href=\"../index.php?action=deleteCategory&id=";
             // line 44
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["c"], "category_id", array()), "html", null, true);
             echo "\">Удалить тему со всеми вопросами</a>
@@ -149,7 +149,7 @@ class __TwigTemplate_75b82219d2e55ad8a2accc98a879e5d95ec4a8dc35f92e5c9fa2643790c
         $context = array_intersect_key($context, $_parent) + $_parent;
         // line 57
         echo "        </select>
-        <input type=\"submit\" name=\"admin_sort_questions\" value=\"Выбрать\">
+        <input type=\"submit\" name=\"adminSortQuestions\" value=\"Выбрать\">
     </form>
 
     ";
@@ -171,15 +171,15 @@ class __TwigTemplate_75b82219d2e55ad8a2accc98a879e5d95ec4a8dc35f92e5c9fa2643790c
                 echo "</td><td>";
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["question"], "status", array()), "html", null, true);
                 echo "</td><td>
-            <a href=\"../index.php?action=del_question&question_id=";
+            <a href=\"../index.php?action=deleteQuestion&question_id=";
                 // line 66
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["question"], "question_id", array()), "html", null, true);
                 echo "\">Удалить</a>
-            <a href=\"../index.php?action=answer&question_id=";
+            <a href=\"../index.php?action=setAnswerPrepare&question_id=";
                 // line 67
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["question"], "question_id", array()), "html", null, true);
                 echo "\">Ответить</a>
-            <a href=\"../index.php?action=edit_question&question_id=";
+            <a href=\"../index.php?action=editQuestionPrepare&question_id=";
                 // line 68
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["question"], "question_id", array()), "html", null, true);
                 echo "\">Редактировать</a>
@@ -187,13 +187,13 @@ class __TwigTemplate_75b82219d2e55ad8a2accc98a879e5d95ec4a8dc35f92e5c9fa2643790c
                 // line 69
                 if ((twig_get_attribute($this->env, $this->getSourceContext(), $context["question"], "status", array()) == "suspended")) {
                     // line 70
-                    echo "                <a href=\"../index.php?action=published&question_id=";
+                    echo "                <a href=\"../index.php?action=changeQuestionStatus&newstatus=published&question_id=";
                     echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["question"], "question_id", array()), "html", null, true);
                     echo "\">Опубликовать</a>
             ";
                 } else {
                     // line 72
-                    echo "                <a href=\"../index.php?action=suspended&question_id=";
+                    echo "                <a href=\"../index.php?action=changeQuestionStatus&newstatus=suspended&question_id=";
                     echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["question"], "question_id", array()), "html", null, true);
                     echo "\">Скрыть</a>
             ";
@@ -210,6 +210,8 @@ class __TwigTemplate_75b82219d2e55ad8a2accc98a879e5d95ec4a8dc35f92e5c9fa2643790c
                 foreach ($context['_seq'] as $context["_key"] => $context["c"]) {
                     // line 79
                     echo "                    <option value=\"";
+                    echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["question"], "question_id", array()), "html", null, true);
+                    echo " ";
                     echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["c"], "category_id", array()), "html", null, true);
                     echo "\">";
                     echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["c"], "category_name", array()), "html", null, true);
@@ -221,7 +223,7 @@ class __TwigTemplate_75b82219d2e55ad8a2accc98a879e5d95ec4a8dc35f92e5c9fa2643790c
                 $context = array_intersect_key($context, $_parent) + $_parent;
                 // line 81
                 echo "                </select>
-                <input type=\"submit\" name=\"change_category\" value=\"В другую тему\">
+                <input type=\"submit\" name=\"changeCategory\" value=\"В другую тему\">
             </form>
         </td></tr>
         ";
@@ -244,7 +246,7 @@ class __TwigTemplate_75b82219d2e55ad8a2accc98a879e5d95ec4a8dc35f92e5c9fa2643790c
             <input type=\"text\" name=\"author\" placeholder=\"Автор ответа\">
             <input type=\"text\" name=\"answer_text\" placeholder=\"и сам ответ\">
             <input type=\"checkbox\" name=\"publish\" value=\"pub\"> <span>Опубликовать после ответа?</span>
-            <input type=\"submit\" name=\"answer_form\" value=\"Отправить\">
+            <input type=\"submit\" name=\"setAnswer\" value=\"Отправить\">
         </form>
     ";
         }
@@ -272,7 +274,7 @@ class __TwigTemplate_75b82219d2e55ad8a2accc98a879e5d95ec4a8dc35f92e5c9fa2643790c
             // line 105
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), twig_get_attribute($this->env, $this->getSourceContext(), ($context["adminVariables"] ?? null), "edit", array()), "answer", array()), "html", null, true);
             echo "\">
-            <input type=\"submit\" name=\"edited_question\" value=\"Отправить\">
+            <input type=\"submit\" name=\"updateQuestion\" value=\"Отправить\">
         </form>
 
     ";
@@ -294,7 +296,7 @@ class __TwigTemplate_75b82219d2e55ad8a2accc98a879e5d95ec4a8dc35f92e5c9fa2643790c
             echo "</td><td>";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["q"], "category", array()), "html", null, true);
             echo "</td><td>
-                <a href=\"../index.php?action=del_question&question_id=";
+                <a href=\"../index.php?action=deleteQuestion&question_id=";
             // line 117
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->getSourceContext(), $context["q"], "question_id", array()), "html", null, true);
             echo "\">Удалить</a>
@@ -324,7 +326,7 @@ class __TwigTemplate_75b82219d2e55ad8a2accc98a879e5d95ec4a8dc35f92e5c9fa2643790c
 
     public function getDebugInfo()
     {
-        return array (  308 => 120,  299 => 117,  292 => 116,  288 => 115,  281 => 110,  273 => 105,  269 => 104,  265 => 103,  261 => 102,  257 => 100,  255 => 99,  252 => 98,  242 => 90,  240 => 89,  237 => 88,  233 => 86,  223 => 81,  212 => 79,  208 => 78,  202 => 74,  196 => 72,  190 => 70,  188 => 69,  184 => 68,  180 => 67,  176 => 66,  167 => 65,  163 => 64,  159 => 62,  157 => 61,  151 => 57,  140 => 55,  136 => 54,  127 => 47,  118 => 44,  105 => 43,  101 => 42,  88 => 31,  80 => 26,  77 => 25,  75 => 24,  71 => 22,  62 => 19,  58 => 18,  49 => 17,  45 => 16,  31 => 4,  28 => 3,  11 => 1,);
+        return array (  310 => 120,  301 => 117,  294 => 116,  290 => 115,  283 => 110,  275 => 105,  271 => 104,  267 => 103,  263 => 102,  259 => 100,  257 => 99,  254 => 98,  244 => 90,  242 => 89,  239 => 88,  235 => 86,  225 => 81,  212 => 79,  208 => 78,  202 => 74,  196 => 72,  190 => 70,  188 => 69,  184 => 68,  180 => 67,  176 => 66,  167 => 65,  163 => 64,  159 => 62,  157 => 61,  151 => 57,  140 => 55,  136 => 54,  127 => 47,  118 => 44,  105 => 43,  101 => 42,  88 => 31,  80 => 26,  77 => 25,  75 => 24,  71 => 22,  62 => 19,  58 => 18,  49 => 17,  45 => 16,  31 => 4,  28 => 3,  11 => 1,);
     }
 
     public function getSourceContext()

@@ -15,8 +15,8 @@
     <tr><th>id</th><th>Логин</th><th>Пароль</th><th>Действия</th></tr>
     {% for admin in adminsList %}
         <tr><td>{{ admin.user_id }}</td><td>{{ admin.login }}</td><td> {{admin.password}} </td><td>
-            <a href="../index.php?action=delete&id={{ admin.user_id }}">Удалить</a>
-            <a href="../index.php?action=editpassword&id={{ admin.user_id }}">Изменить пароль</a>
+            <a href="../index.php?action=deleteAdmin&id={{ admin.user_id }}">Удалить</a>
+            <a href="../index.php?action=editPassword&id={{ admin.user_id }}">Изменить пароль</a>
             </td></tr>
     {% endfor %}
     </table>
@@ -25,7 +25,7 @@
         <form method="POST" action="../index.php">
             <p>Меняем пароль администратору с id {{ adminVariables.editpassword_id }}</p>
             <input type="text" name="newpass" placeholder="Введите новый пароль">
-            <input type="submit" name="setpass" value="Отправить">
+            <input type="submit" name="setPassword" value="Отправить">
         </form>
     {% endif %}
     <br><hr><br>
@@ -41,7 +41,7 @@
         <tr><th>id</th><th>Название темы</th><th>Всего вопросов</th><th>Опубликовано</th><th>Без ответа/заморожено</th><th>Действия</th></tr>
         {% for c in categoriesList %}
         <tr><td>{{ c.category_id }}</td><td>{{ c.category_name }}</td><td>{{ c.overall }}</td><td>{{ c.published }}</td><td>{{ c.suspended }}</td><td>
-            <a href="../index.php?action=deleteCat&id={{ c.category_id }}">Удалить тему со всеми вопросами</a>
+            <a href="../index.php?action=deleteCategory&id={{ c.category_id }}">Удалить тему со всеми вопросами</a>
         </td></tr>
         {% endfor %}
     </table>
@@ -55,7 +55,7 @@
             <option value="{{ c.category_id }}">{{ c.category_name }}</option>
             {% endfor %}
         </select>
-        <input type="submit" name="admin_sort_questions" value="Выбрать">
+        <input type="submit" name="adminSortQuestions" value="Выбрать">
     </form>
 
     {% if adminVariables.sortedQuestions %}
@@ -63,23 +63,23 @@
         <tr><th>Вопрос</th><th>Дата создания</th><th>Статус</th><th>Действия</th><th>Изменение темы</th></tr>
         {% for question in adminVariables.sortedQuestions %}
         <tr><td>{{ question.question }}</td><td>{{ question.date_added }}</td><td>{{ question.status }}</td><td>
-            <a href="../index.php?action=del_question&question_id={{ question.question_id }}">Удалить</a>
-            <a href="../index.php?action=answer&question_id={{ question.question_id }}">Ответить</a>
-            <a href="../index.php?action=edit_question&question_id={{ question.question_id }}">Редактировать</a>
+            <a href="../index.php?action=deleteQuestion&question_id={{ question.question_id }}">Удалить</a>
+            <a href="../index.php?action=setAnswerPrepare&question_id={{ question.question_id }}">Ответить</a>
+            <a href="../index.php?action=editQuestionPrepare&question_id={{ question.question_id }}">Редактировать</a>
             {% if question.status == 'suspended' %}
-                <a href="../index.php?action=published&question_id={{ question.question_id }}">Опубликовать</a>
+                <a href="../index.php?action=changeQuestionStatus&newstatus=published&question_id={{ question.question_id }}">Опубликовать</a>
             {% else %}
-                <a href="../index.php?action=suspended&question_id={{ question.question_id }}">Скрыть</a>
+                <a href="../index.php?action=changeQuestionStatus&newstatus=suspended&question_id={{ question.question_id }}">Скрыть</a>
             {% endif %}
             </td><td>
             <form method="POST" action="../index.php">
                 <select name="change_category_id">
                     <option selected disabled>выберите тему</option>
                     {% for c in categoriesList %}
-                    <option value="{{ c.category_id }}">{{ c.category_name }}</option>
+                    <option value="{{ question.question_id}} {{ c.category_id }}">{{ c.category_name }}</option>
                     {% endfor %}
                 </select>
-                <input type="submit" name="change_category" value="В другую тему">
+                <input type="submit" name="changeCategory" value="В другую тему">
             </form>
         </td></tr>
         {% endfor %}
@@ -92,7 +92,7 @@
             <input type="text" name="author" placeholder="Автор ответа">
             <input type="text" name="answer_text" placeholder="и сам ответ">
             <input type="checkbox" name="publish" value="pub"> <span>Опубликовать после ответа?</span>
-            <input type="submit" name="answer_form" value="Отправить">
+            <input type="submit" name="setAnswer" value="Отправить">
         </form>
     {% endif %}
 
@@ -103,7 +103,7 @@
             <input type="text" name="author" value="{{ adminVariables.edit.author_name }}">
             <input type="text" name="email" value="{{ adminVariables.edit.author_email }}">
             <input type="text" name="answer" value="{{ adminVariables.edit.answer }}">
-            <input type="submit" name="edited_question" value="Отправить">
+            <input type="submit" name="updateQuestion" value="Отправить">
         </form>
 
     {% endif %}
@@ -114,7 +114,7 @@
         <tr><th>Вопрос</th><th>Тема</th><th>Действия</th></tr>
         {% for q in uaQuestions %}
             <tr><td>{{ q.question }}</td><td>{{ q.category }}</td><td>
-                <a href="../index.php?action=del_question&question_id={{ q.question_id }}">Удалить</a>
+                <a href="../index.php?action=deleteQuestion&question_id={{ q.question_id }}">Удалить</a>
             </td></tr>
         {% endfor %}
     </table>

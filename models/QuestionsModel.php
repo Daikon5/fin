@@ -1,10 +1,13 @@
 <?php
 
-class QuestionActions {
+class QuestionsModel {
     function __construct($db) {
         $this->db = $db;
     }
 
+    /*
+     * обработка вопроса от пользователя
+     */
     function processUserQuestion($array) {
         $inputErrors = [];
         $wantedFields = ['question','email','name','category_id'];
@@ -27,7 +30,10 @@ class QuestionActions {
         }
     }
 
-    function getQuestionsAll() {                                                                         //  все отвеченные вопросы для пользователя
+    /*
+     * все опубликованные вопросы с ответами
+     */
+    function getQuestionsAll() {
         try {
             $questionsQuery = 'SELECT q.author_name, q.author_email, q.question, q.date_added, a.answer, a.author as answerer, c.category_name as category
                           FROM questions q
@@ -45,7 +51,10 @@ class QuestionActions {
         return $questions;
     }
 
-    function getQuestionsByCategory($category) {                                                          //  отвеченный вопросы в выбранной категории
+    /*
+     * опубликованные вопросы в определенной категории
+     */
+    function getQuestionsByCategory($category) {
         try {
             $questionsQuery = 'SELECT q.author_name, q.author_email, q.question, q.date_added, a.answer, a.author as answerer, c.category_name as category
                           FROM questions q
@@ -63,6 +72,9 @@ class QuestionActions {
         return $questions;
     }
 
+    /*
+     * вопросы без ответа
+     */
     function getUnansweredQuestions() {
         try {
             $sqlGetSuspendedQuestions = 'SELECT q.author_name, q.question_id, q.author_email, q.question, q.date_added, c.category_name as category 
@@ -92,9 +104,12 @@ class QuestionActions {
         return $suspendedQuestions;
     }
 
+    /*
+     * вопросы отсортированные по категории
+     */
     function getSortedQuestions($categoryId) {
         try {
-            $sqlSortQuestions = 'SELECT * FROM questions WHERE category_id = ?';
+            $sqlSortQuestions = 'SELECT question_id, category_id, author_name, author_email, question, status, date_added FROM questions WHERE category_id = ?';
             $query = $this->db->prepare($sqlSortQuestions);
             $query->execute([$categoryId]);
             $sortedQuestions = $query->fetchAll();
@@ -106,6 +121,9 @@ class QuestionActions {
         return $sortedQuestions;
     }
 
+    /*
+     * удаление вопроса
+     */
     function deleteQuestion($question_id) {
         try {
             $sqlDeleteQuestion = 'DELETE FROM questions WHERE question_id = ?';
@@ -116,6 +134,9 @@ class QuestionActions {
         }
     }
 
+    /*
+     * изменение категории вопроса
+     */
     function changeCategory($string) {
         $result = explode(' ', $string);
         $question_id = $result[0];
@@ -130,6 +151,9 @@ class QuestionActions {
         }
     }
 
+    /*
+     * изменение статуса вопроса
+     */
     function changeStatus($newStatus, $question_id) {
         try {
             $sqlCangeStatus = "UPDATE questions SET status = ? WHERE question_id = ?";
@@ -140,6 +164,9 @@ class QuestionActions {
         }
     }
 
+    /*
+     * добавление ответа на вопрос
+     */
     function setAnswer($question_id, $answer, $author, $publish) {
         $dateNow = date('Y-m-d')." ".date('H:i:s');
 
@@ -154,6 +181,9 @@ class QuestionActions {
         $this->changeStatus($publish, $question_id);
     }
 
+    /*
+     * получение вопроса и ответа на него для редактирования
+     */
     function getQuestionToEdit($question_id) {
         try {
             $sqlGetQuestionToEdit = 'SELECT q.question_id, q.question, q.author_name, q.author_email, a.answer, a.answer_id
@@ -171,6 +201,9 @@ class QuestionActions {
         return $questionToEdit;
     }
 
+    /*
+     * отправка отредактированного вопроса
+     */
     function updateAnsweredQuestion($question_id, $answer_id, $author, $email, $question, $answer) {
         try {
             $sqlUpdateQuestion = 'UPDATE questions SET author_name = ?, author_email = ?, question = ? WHERE question_id = ?';

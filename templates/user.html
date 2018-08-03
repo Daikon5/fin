@@ -22,7 +22,7 @@
     <section class="categories">
         <div class="category">
             {% for cat in categories %}
-            <p><a href="../index.php?category={{cat.category_id}}">{{ cat.category_name }} </a></p>
+            <p><a href="../index.php?getQuestionsByCategoryId={{cat.category_id}}">{{ cat.category_name }} </a></p>
             {% endfor %}
         </div>
     </section>

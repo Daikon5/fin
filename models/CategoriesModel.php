@@ -1,14 +1,17 @@
 <?php
 
-class CategoriesAction {
+class CategoriesModel {
 
     function __construct($db) {
         $this->db = $db;
     }
 
+    /*
+     * список категорий для пользователя
+     */
     function getUserCategories() {                                                                          //  категории для пользователя
         try {
-            $categoriesQuery = 'SELECT * FROM categories';
+            $categoriesQuery = 'SELECT category_id, category_name FROM categories';
             $query = $this->db->prepare($categoriesQuery);
             $query->execute();
             $categories = $query->fetchAll();
@@ -20,9 +23,12 @@ class CategoriesAction {
         return $categories;
     }
 
+    /*
+     * список категорий для администратора
+     */
     function getAllCategories() {
         try {
-            $sqlGetCategoriesList = 'SELECT * FROM categories';
+            $sqlGetCategoriesList = 'SELECT category_id, category_name FROM categories';
             $query = $this->db->prepare($sqlGetCategoriesList);
             $query->execute();
             $categoriesList = $query->fetchAll();
@@ -61,11 +67,14 @@ class CategoriesAction {
         return $ultimateCategoriesList;
     }
 
+    /*
+     * создание новой категории
+     */
     function addCategory($newCategory) {
         $unique = true;
 
         try {
-            $sqlGetCategoriesList = 'SELECT * FROM categories';
+            $sqlGetCategoriesList = 'SELECT category_id, category_name FROM categories';
             $query = $this->db->prepare($sqlGetCategoriesList);
             $query->execute();
             $categoriesList = $query->fetchAll();
@@ -86,6 +95,9 @@ class CategoriesAction {
         }
     }
 
+    /*
+     * удаление категории
+     */
     function deleteCategory($categoryId) {
         try {
             $tables = ['categories', 'questions'];
@@ -99,9 +111,12 @@ class CategoriesAction {
         }
     }
 
+    /*
+     * вопросы из определенной категории
+     */
     function getQuestionsByCategory($categoryId) {
         try {
-            $sqlGetQuestions = 'SELECT * FROM questions WHERE category_id = ?';
+            $sqlGetQuestions = 'SELECT question_id, category_id, author_name, author_email, question, status, date_added FROM questions WHERE category_id = ?';
             $query = $this->db->prepare($sqlGetQuestions);
             $query->execute([$categoryId]);
             $questionsList = $query->fetchAll();
